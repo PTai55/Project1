@@ -14,7 +14,7 @@ load_dotenv()
 
 # We pull the connection string from the environment
 # In a hedge fund, you'd have different URLs for 'dev', 'test', and 'prod'
-DB_URL = os.getenv("DATABASE_URL")
+DB_URL = os.getenv("DATABASE_URL", "postgresql://quant_user:password123@localhost:5432/alpha_db") # Fallback if environment variable isn't found
 
 # The 'engine' is the core of SQLAlchemy. It manages a 'pool' of connections to the PostgreSQL database.
 engine = create_engine(DB_URL)
