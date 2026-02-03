@@ -1,6 +1,8 @@
-import os
+import os # Provides access to operating system functionality, such as environment variables and file paths
 from sqlalchemy import create_engine, text
-from dotenv import load_dotenv
+# create_engine: used to establish a connection to a database
+# text: allows writing raw SQL queries safely within SQLAlchemy
+from dotenv import load_dotenv # Loads environment variables from a .env file into the application's environment
 
 ## 1. SETUP and CONFIGURATION ##
 
