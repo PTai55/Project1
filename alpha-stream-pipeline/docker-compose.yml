@@ -10,12 +10,12 @@ services:
     # The project is using 'postgres' version 15. This is the "OS" of our database.
     image: postgres:15
 
-    # 'container_name' is the nickname seen when you run 'docker ps'.
+    # 'container_name' is the nickname seen when running 'docker ps'.
     # It makes it easier to manage than the random IDs Docker usually assigns.
     container_name: hedge_fund_db
 
     # 'restart: always' is crucial for hedge fund apps. 
-    # If the database crashes or your computer restarts, Docker will 
+    # If the database crashes or user computer restarts, Docker will 
     # automatically try to boot the database back up.
     restart: always
 
@@ -29,11 +29,10 @@ services:
       # ERROR TIP: If this is empty or missing, the container will crash!
       POSTGRES_PASSWORD: password123
       
-      # The name of the actual 'folder' (database) inside Postgres where 
-      # our tables (assets, prices) will live.
+      # The name of the actual 'folder' (database) inside Postgres where our tables (assets, prices) will live.
       POSTGRES_DB: alpha_db
 
-    # 'ports' is the bridge between your computer and the Docker container.
+    # 'ports' is the bridge between user computer and the Docker container.
     # Format is "HOST:CONTAINER"
     # 5432 (Left): The port on USER computer (where Python looks).
     # 5432 (Right): The port INSIDE the container (where Postgres listens).
