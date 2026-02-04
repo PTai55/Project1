@@ -79,7 +79,7 @@ if not df.empty:
     
     # Display the table with the visual stying applied to the "signal_type" column.
     st.dataframe(
-        df.style.applymap(highlight_signals, subset=["signal_type"]), width="stretch"
+        df.style.map(highlight_signals, subset=["signal_type"]), width="stretch"
     )
 
     ## 5. Data Visualization (Charts) ##
