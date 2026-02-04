@@ -1,11 +1,41 @@
+# 'services' defines the different pieces of software that make up the app.
+# Right now, there is only have one service: our database.
 services:
+
+  # 'db' is the internal name given to this service. 
+  # Other containers in this project will use this name to find the database.
   db:
+  
+    # 'image' tells Docker which pre-built software to download from the internet.
+    # The project is using 'postgres' version 15. This is the "OS" of our database.
     image: postgres:15
+
+    # 'container_name' is the nickname seen when you run 'docker ps'.
+    # It makes it easier to manage than the random IDs Docker usually assigns.
     container_name: hedge_fund_db
+
+    # 'restart: always' is crucial for hedge fund apps. 
+    # If the database crashes or your computer restarts, Docker will 
+    # automatically try to boot the database back up.
     restart: always
+
+    # 'environment' is where we set the "Rules" for our database.
+    # Think of this as the "Sign-up" form for the first time it starts.
     environment:
+      # The master username for the database.
       POSTGRES_USER: quant_user
+      
+      # The master password. Your Python code will use this to "login".
+      # ERROR TIP: If this is empty or missing, the container will crash!
       POSTGRES_PASSWORD: password123
+      
+      # The name of the actual 'folder' (database) inside Postgres where 
+      # our tables (assets, prices) will live.
       POSTGRES_DB: alpha_db
+
+    # 'ports' is the bridge between your computer and the Docker container.
+    # Format is "HOST:CONTAINER"
+    # 5432 (Left): The port on USER computer (where Python looks).
+    # 5432 (Right): The port INSIDE the container (where Postgres listens).
     ports:
       - "5432:5432"
