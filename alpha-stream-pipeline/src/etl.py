@@ -17,8 +17,12 @@ def fetch_and_load_data(tickers):
             print(f"Warning: No data found for {ticker}. Skipping.")
             continue
         
-        # 2. Transform: Clean up the data format. Yahoo Finance returns a "MultiIndex" DataFrame. We flatten it.
+        # 2. Transform: Flatten MultiIndex and Clean Columns
+        if isinstance(data.columns, pd.MultiIndex):
+            data.columns = data.columns.get_level_values(0)
         data = data.reset_index()
+        data.columns = [str(col).strip().lower().replace(" ", "_").replace(".", "") for col in data.columns]
+        print(f"Debug: Cleaned columns are: {list(data.columns)}")
 
         # 3. Load: Save to Database 
         with engine.connect() as conn:
@@ -35,9 +39,15 @@ def fetch_and_load_data(tickers):
             # Loop through the rows and "UPSERT" (Update or Insert)
             print(f"Saving {len(data)} rows to database...")
             for index, row in data.iterrows():
+                # The user must use the lowercase keys defined in the transformation step above
+                p_date = row.get("date")
+                price = row.get("adj_close") or row.get("close")
+                vol = row.get("volume", 0)
+                if p_date is None or price is None:
+                    continue
                 conn.execute(text("""INSERT INTO 
                                   daily_prices (asset_id, price_date, adj_close_price, volume) VALUES (:a_id, :p_date, :price, :vol)ON CONFLICT (asset_id, price_date) DO NOTHING
-                                  """), {"a_id": asset_id, "p_date": row["Date"], "price": float(row["Adj Close"]), "vol": int(row["Volume"])})
+                                  """), {"a_id": asset_id, "p_date": p_date, "price": float(price), "vol": int(vol)})
                 
                 # Finalize the transaction
                 conn.commit()
