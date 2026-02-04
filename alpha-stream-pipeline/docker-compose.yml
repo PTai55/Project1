@@ -4,8 +4,8 @@ services:
     container_name: hedge_fund_db
     restart: always
     environment:
-      postgres_user: quant_user
-      postgres_password: password123
-      postgres_db: alpha_db
+      POSTGRES_USER: quant_user
+      POSTGRES_PASSWORD: password123
+      POSTGRES_DB: alpha_db
     ports:
       - "5432:5432"
